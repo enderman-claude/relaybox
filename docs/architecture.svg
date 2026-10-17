@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 410" role="img" aria-labelledby="title desc">
+  <title id="title">RelayBox architecture</title>
+  <desc id="desc">The controller probes the capturing PC helper, then calls negotiate through Caddy to the RelayBox API, which runs a startup self-test.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+  </defs>
+  <g font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="18" fill="#1a1a1a">
+    <!-- Controller page (planned, not built yet) -->
+    <rect x="20" y="20" width="200" height="70" rx="8" fill="#f0f6ff" stroke="#3b6ea5" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="120" y="50" text-anchor="middle" font-weight="600">Controller page</text>
+    <text x="120" y="74" text-anchor="middle" font-size="14">https://relaybox.local</text>
+
+    <!-- Capturing PC helper -->
+    <rect x="280" y="20" width="180" height="70" rx="8" fill="#f0f6ff" stroke="#3b6ea5" stroke-width="2"/>
+    <text x="370" y="50" text-anchor="middle" font-weight="600">Capturing PC</text>
+    <text x="370" y="74" text-anchor="middle" font-size="14">relaybox-helper :7777</text>
+
+    <!-- Probe arrow -->
+    <line x1="220" y1="55" x2="280" y2="55" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="250" y="45" text-anchor="middle" font-size="14">probe</text>
+
+    <!-- Controller to Caddy -->
+    <line x1="120" y1="90" x2="120" y2="130" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="132" y="116" font-size="14">POST /api/negotiate</text>
+
+    <!-- Caddy -->
+    <rect x="20" y="130" width="200" height="60" rx="8" fill="#f6f8fa" stroke="#555" stroke-width="2"/>
+    <text x="120" y="158" text-anchor="middle" font-weight="600">Caddy</text>
+    <text x="120" y="178" text-anchor="middle" font-size="14">HTTPS, strips /api</text>
+
+    <!-- Caddy to API -->
+    <line x1="120" y1="190" x2="120" y2="230" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- RelayBox API -->
+    <rect x="20" y="230" width="200" height="60" rx="8" fill="#f6f8fa" stroke="#555" stroke-width="2"/>
+    <text x="120" y="258" text-anchor="middle" font-weight="600">RelayBox API</text>
+    <text x="120" y="278" text-anchor="middle" font-size="14">negotiate, sessions</text>
+
+    <!-- API to self-test -->
+    <line x1="120" y1="290" x2="120" y2="330" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="132" y="316" font-size="14">at startup</text>
+
+    <!-- Startup self-test -->
+    <rect x="20" y="330" width="200" height="60" rx="8" fill="#f6f8fa" stroke="#555" stroke-width="2"/>
+    <text x="120" y="358" text-anchor="middle" font-weight="600">Startup self-test</text>
+    <text x="120" y="378" text-anchor="middle" font-size="14">ffmpeg encoder check</text>
+  </g>
+</svg>
