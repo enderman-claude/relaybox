@@ -1,0 +1,9 @@
+relaybox.local {
+    tls internal
+
+    handle_path /api/* {
+        reverse_proxy relaybox:3000
+    }
+
+    respond 404
+}

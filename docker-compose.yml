@@ -1,0 +1,32 @@
+services:
+  relaybox:
+    build:
+      context: .
+      target: final
+    image: relaybox:local
+    restart: unless-stopped
+    environment:
+      API_TOKEN: ${API_TOKEN:?set API_TOKEN in .env}
+      MAX_BITRATE_KBPS: ${MAX_BITRATE_KBPS:-4000}
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "${RENDER_GID:?set RENDER_GID in .env}"
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - relaybox
+    ports:
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

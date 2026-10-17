@@ -1,0 +1,15 @@
+{
+  "name": "relaybox",
+  "version": "0.1.0",
+  "description": "Relay server that negotiates and tracks media sessions for screen capture, YouTube, and local streams",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test test/*.test.mjs helper/test/*.test.mjs",
+    "test:ffmpeg": "RELAYBOX_REQUIRE_FFMPEG=1 node --test test/ffmpeg.integration.test.mjs"
+  }
+}
