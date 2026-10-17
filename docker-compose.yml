@@ -1,11 +1,10 @@
 # RelayBox on a home server: the API container plus Caddy for HTTPS.
+# The API image is pulled from GitHub Container Registry.
 # Only Caddy publishes a port (443). The API is reachable only through Caddy.
 services:
   relaybox:
-    build:
-      context: .
-      target: final
-    image: relaybox:local
+    image: ghcr.io/enderman-claude/relaybox:${RELAYBOX_VERSION:-latest}
+    pull_policy: always
     restart: unless-stopped
     environment:
       API_TOKEN: ${API_TOKEN:?set API_TOKEN in .env}

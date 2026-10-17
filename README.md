@@ -53,9 +53,9 @@ npm run test:ffmpeg   # fails if ffmpeg is missing (this is what CI runs)
 API_TOKEN=$(openssl rand -hex 24) npm start    # listens on :3000
 ```
 
-## Deploying on the mini PC
+## Install on the mini PC
 
-These steps assume Arch Linux, but any Linux with Docker and Compose works.
+These steps assume Arch Linux, but any Linux with Docker and Compose works. The image is published at `ghcr.io/enderman-claude/relaybox`.
 
 ### 1. Install Docker
 
@@ -65,28 +65,29 @@ sudo systemctl enable --now docker
 sudo usermod -aG docker $USER      # log out and back in afterwards
 ```
 
-### 2. Get the code and configure it
+### 2. Get the deployment files and set a token
 
 ```bash
 git clone https://github.com/enderman-claude/relaybox.git
 cd relaybox
 cp .env.example .env
-openssl rand -hex 24               # paste the output as API_TOKEN in .env
+sed -i "s|^API_TOKEN=.*|API_TOKEN=$(openssl rand -hex 24)|" .env
 ```
 
-Keep `.env` private. It holds the API token.
+`.env` holds the API token. Keep it private and never commit it.
 
-### 3. Start the stack
+### 3. Pull the image and start
 
 ```bash
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 docker compose ps                  # both services should be running
 docker compose logs relaybox       # shows the ffmpeg self-test result
 ```
 
-The build runs the full test suite, including the real ffmpeg check. If a test fails, the image isn't built.
+To pin a release, set `RELAYBOX_VERSION=0.1.0` in `.env` (released tags are published without the `v`). To build from source instead of pulling, use `docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build`.
 
-The startup log includes a line like `ffmpeg: true, encoders: libx264`. The container has no GPU access, so `libx264` is the only encoder it will see. Hardware encoders can be added later with device mappings.
+The startup log includes a line like `ffmpeg: true, encoders: libx264`. The container has no GPU access, so `libx264` is the only encoder it sees.
 
 ### 4. Make `relaybox.local` resolve
 
@@ -175,9 +176,8 @@ To release:
 ```bash
 git tag v0.1.0
 git push origin v0.1.0
+# Publishes ghcr.io/enderman-claude/relaybox:0.1.0 and :latest
 ```
-
-To run the stack from the published image instead of building locally, replace the `build:` block in `docker-compose.yml` with `image: ghcr.io/enderman-claude/relaybox:latest`. The package must be public, or the server must log in to GHCR.
 
 ## Configuration
 
