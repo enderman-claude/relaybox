@@ -1,6 +1,10 @@
+# Serves the RelayBox API at https://relaybox.local/api/...
+# "tls internal" makes Caddy issue certificates from its own local CA.
+# Clients must trust that CA (see README, "Trust the certificate").
 relaybox.local {
     tls internal
 
+    # /api/negotiate reaches the app as /negotiate
     handle_path /api/* {
         reverse_proxy relaybox:3000
     }

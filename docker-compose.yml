@@ -1,3 +1,5 @@
+# RelayBox on a home server: the API container plus Caddy for HTTPS.
+# Only Caddy publishes a port (443). The API is reachable only through Caddy.
 services:
   relaybox:
     build:
@@ -8,10 +10,6 @@ services:
     environment:
       API_TOKEN: ${API_TOKEN:?set API_TOKEN in .env}
       MAX_BITRATE_KBPS: ${MAX_BITRATE_KBPS:-4000}
-    devices:
-      - /dev/dri:/dev/dri
-    group_add:
-      - "${RENDER_GID:?set RENDER_GID in .env}"
     expose:
       - "3000"
 

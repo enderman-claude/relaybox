@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
 
-# Shared runtime: Node 22 plus ffmpeg and VA-API tools for the self-test.
+# Shared runtime. ffmpeg is needed by the startup self-test and by later ingest/remux work.
 FROM node:22-bookworm-slim AS base
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      ffmpeg vainfo mesa-va-drivers ca-certificates \
+      ffmpeg ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package.json ./
@@ -15,8 +15,8 @@ COPY test ./test
 COPY helper ./helper
 RUN npm test && touch /app/.tests-passed
 
-# Final image. It copies the test marker from the test stage, so the image
-# cannot build unless the tests pass.
+# Final image. It copies the marker from the test stage, so it cannot be built
+# unless the tests pass.
 FROM base AS final
 COPY --from=test /app/.tests-passed /app/.tests-passed
 ENV NODE_ENV=production
