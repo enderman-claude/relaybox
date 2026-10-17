@@ -85,7 +85,7 @@ docker compose ps                  # both services should be running
 docker compose logs relaybox       # shows the ffmpeg self-test result
 ```
 
-To pin a release, set `RELAYBOX_VERSION=0.1.0` in `.env` (released tags are published without the `v`). To build from source instead of pulling, use `docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build`.
+To pin a release, set `RELAYBOX_VERSION=v0.1.0` in `.env`. Image tags match the git tag, including the `v`. To build from source instead of pulling, use `docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build`.
 
 The startup log includes a line like `ffmpeg: true, encoders: libx264`. The container has no GPU access, so `libx264` is the only encoder it sees.
 
@@ -176,7 +176,7 @@ To release:
 ```bash
 git tag v0.1.0
 git push origin v0.1.0
-# Publishes ghcr.io/enderman-claude/relaybox:0.1.0 and :latest
+# Publishes ghcr.io/enderman-claude/relaybox:v0.1.0 and :latest
 ```
 
 ## Configuration
