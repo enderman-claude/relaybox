@@ -55,7 +55,7 @@ API_TOKEN=$(openssl rand -hex 24) npm start    # listens on :3000
 
 ## Install on the mini PC
 
-These steps assume Arch Linux, but any Linux with Docker and Compose works. The image is published at `ghcr.io/enderman-claude/relaybox`.
+These steps assume Arch Linux, but any Linux with Docker and Compose works. Releases are also published to `ghcr.io/enderman-claude/relaybox`.
 
 ### 1. Install Docker
 
@@ -76,16 +76,23 @@ sed -i "s|^API_TOKEN=.*|API_TOKEN=$(openssl rand -hex 24)|" .env
 
 `.env` holds the API token. Keep it private and never commit it.
 
-### 3. Pull the image and start
+### 3. Build from source and start
+
+This builds the image from the checkout, so it works without a published package. The build runs the full test suite and fails if any test fails.
 
 ```bash
-docker compose pull
-docker compose up -d
+docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
 docker compose ps                  # both services should be running
 docker compose logs relaybox       # shows the ffmpeg self-test result
 ```
 
-To pin a release, set `RELAYBOX_VERSION=v0.1.0` in `.env`. Image tags match the git tag, including the `v`. To build from source instead of pulling, use `docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build`.
+Once the GHCR package is public, you can skip the build and pull the release instead:
+
+```bash
+docker compose pull && docker compose up -d
+```
+
+Pin a release by setting `RELAYBOX_VERSION=v0.1.0` in `.env`. Image tags match the git tag, including the `v`. Without that variable, the pull uses `latest`.
 
 The startup log includes a line like `ffmpeg: true, encoders: libx264`. The container has no GPU access, so `libx264` is the only encoder it sees.
 
