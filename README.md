@@ -8,16 +8,18 @@ The server only answers requests. It never pushes to devices, and it never downl
 
 ## How it fits together
 
+```mermaid
+flowchart LR
+    subgraph PC[Capturing PC]
+        H[relaybox-helper<br/>127.0.0.1:7777]
+    end
+    C[Controller page<br/>https://relaybox.local] -->|probe| H
+    C -->|POST /api/negotiate| Caddy[Caddy<br/>HTTPS]
+    Caddy -->|/negotiate| API[RelayBox API]
+    API --> ST[Startup self-test<br/>ffmpeg]
 ```
- capturing PC                         mini PC (Docker)                 any device
- ─────────────                        ────────────────                 ──────────
- relaybox-helper.mjs  ── probe ──▶    (helper answers the                 
- (ffmpeg, 127.0.0.1)                   controller's probe)                
-                                                                         
- controller page ── POST /api/negotiate ──▶ Caddy (HTTPS) ──▶ relaybox API
-                 ◀──── plan + session_id ────┘                    │
-                                                                  └─ self-test at startup (ffmpeg)
-```
+
+The controller page is planned but not built yet. The helper is only reached from that page, because it answers only the `https://relaybox.local` origin.
 
 Negotiation, in priority order:
 
